@@ -22,7 +22,7 @@ where ```Protocol``` is one of following:
 You also have to add following dependency:
 
 ```erlang
-{rebar_scm_plugin, {git, "git://github.com/gregorej/rebar_scm_plugin"}}
+{rebar_scm_plugin, "1", {git, "git://github.com/gregorej/rebar_scm_plugin"}}
 ```
 
 

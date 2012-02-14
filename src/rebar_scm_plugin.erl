@@ -1,16 +1,14 @@
 -module(rebar_scm_plugin).
 
 -export([
-	pre_scm/2,
 	scm/2
 ]).
 
--include_lib("rebar/include/rebar.hrl").
+-include_lib("rebar.hrl").
 
 
 %%
 % url() ::= {protocol, [Path]}
-
 
 as_url(UrlString) ->
 	Sep = "://",
@@ -28,16 +26,11 @@ as_string({Protocol, PathParts})  ->
 	atom_to_list(Protocol) ++ "://" ++ string:join(PathParts, "/").
 
 
-pre_scm(Config, AppFile) ->
-	rebar_config:set_global(skip_deps, true),
-	ok.
-
 % copied from http://hyperthunk.github.com/rebar-plugin-tutorial/part-2-plugin-anatomy/index.html
 is_base_dir() ->
     rebar_utils:get_cwd() == rebar_config:get_global(base_dir, undefined).
 
-scm(Config, AppFile) ->
-	?DEBUG("Works!~nConfig: ~p~nAppFile: ~p~n", [Config, AppFile]),
+scm(Config, _AppFile) ->
 	case is_base_dir() of
 		true -> 
 			Tag = rebar_config:get_global(tag, undefined),
@@ -65,15 +58,17 @@ scm(Config, AppFile) ->
 tag({svn, UrlStr}, Tag) when is_list(UrlStr) ->
 	{ok, {Protocol, Path}} = as_url(UrlStr),
 	TargetPath = case lists:last(Path) of
+		% get rid of /trunk and append /tags/[Tag]
 		"trunk" -> lists:append(lists:sublist(Path, length(Path) - 1), ["tags",Tag]);
 		_ -> lists:append(Path, ["tags", Tag])
 	end,
 	rebar_utils:sh("svn copy " ++ UrlStr ++ " " ++ as_string({Protocol, TargetPath}), []);
 
 tag({git, _Url}, Tag) ->
-	?Tag("Tagging with Git ~s", [Url]),
-	rebar_utils:sh("git tag " ++ Tag).
+	?INFO("Tagging with Git ~s", [Tag]),
+	rebar_utils:sh("git tag " ++ Tag);
 
 
-tag({Scm, _},Tag) ->
+tag({Scm, _}, _Tag) ->
 	?ERROR("Unknown scm: ~p", [Scm]).
+
