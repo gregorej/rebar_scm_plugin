@@ -9,6 +9,7 @@ In order to use this plugin you have to have following information in your ```re
 ```erlang
 {plugins, [rebar_scm_plugin]}
 ```
+,
 
 ```erlang
 {scm, {Protocol, "Path to your scm root"}}
@@ -17,6 +18,8 @@ where ```Protocol``` is one of following:
 
 * ```svn```
 * ```git```
+
+and
 
 ```erlang
 {deps, {git, "git://github.com/gregorej/rebar_scm_plugin"}}
