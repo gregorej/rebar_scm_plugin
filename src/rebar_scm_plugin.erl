@@ -62,7 +62,7 @@ tag({svn, UrlStr}, Tag) when is_list(UrlStr) ->
 		"trunk" -> lists:append(lists:sublist(Path, length(Path) - 1), ["tags",Tag]);
 		_ -> lists:append(Path, ["tags", Tag])
 	end,
-	rebar_utils:sh(?FMT("svn copy -m ~s ~s ~s", ["Tagging " ++ Tag, UrlStr, as_string({Protocol, TargetPath})]), []);
+	rebar_utils:sh(?FMT("svn copy -m \"~s\" ~s ~s", ["Tagging " ++ Tag, UrlStr, as_string({Protocol, TargetPath})]), []);
 
 tag({git, _Url}, Tag) ->
 	?INFO("Tagging with Git ~s", [Tag]),
