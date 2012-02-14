@@ -13,4 +13,9 @@ In order to use this plugin you have to have following information in your ```re
 ```erlang
 {scm, {Protocol, "Path to your scm root"}}
 ```
-where ```Protocol``` is one of following:
+> where ```Protocol``` is one of following:
+
+> * ```svn```
+> * ```git```
+
+
