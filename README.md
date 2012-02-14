@@ -19,7 +19,7 @@ where ```Protocol``` is one of following:
 * ```git```
 
 ```erlang
-{deps, {git, "git@github.com:gregorej/rebar_scm_plugin"}}
+{deps, {git, "git://github.com/gregorej/rebar_scm_plugin"}}
 ```
 
 
