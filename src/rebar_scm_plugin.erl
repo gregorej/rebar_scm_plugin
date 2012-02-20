@@ -30,10 +30,10 @@ as_string({Protocol, PathParts})  ->
 is_base_dir() ->
     rebar_utils:get_cwd() == rebar_config:get_global(base_dir, undefined).
 
-scm(Config, _AppFile) ->
+scm(Config, AppFile) ->
+	?DEBUG("scm(~p, ~s)~n", [Config, AppFile]),
 	case is_base_dir() of
 		true -> 
-			Tag = rebar_config:get_global(tag, undefined),
 			Scm = rebar_config:get_local(Config, scm, undefined),
 			case Scm of
 				undefined -> 
@@ -41,15 +41,16 @@ scm(Config, _AppFile) ->
 					?FAIL;
 				_ -> ok
 			end,
-			?DEBUG("Tag = ~p~n", [Tag]),
-			case Tag of
+			Tag = case rebar_config:get_global(tag, undefined) of
 				undefined -> 
-					?ERROR("No tag specified", []),
-					?FAIL;
-				_ -> 
-					?INFO("Tagging with tag ~s~n", [Tag]),
-					tag(Scm,Tag)
-			end;
+					Vsn = rebar_app_utils:app_vsn(AppFile),
+					?INFO("No tag specified. Tagging with application version [~s]", [Vsn]),
+					Vsn;
+				Other -> 
+					?INFO("Tagging with tag ~s~n", [Other]),
+					Other
+			end,
+			tag(Scm,Tag);
 		false -> 
 			?DEBUG("Ignoring dependency ",[])
 	end,
